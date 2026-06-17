@@ -31,8 +31,8 @@ export default function Input({
     ? 'nb-input border-mint shadow-[3px_3px_0px_#5DCAA5]'
     : 'nb-input'
 
-  const hasLeftIcon = icon && iconPosition === 'left'
-  const hasRightContent = (icon && iconPosition === 'right') || isPassword
+  const hasLeftIcon = Boolean(icon) && iconPosition === 'left'
+  const hasRightContent = (Boolean(icon) && iconPosition === 'right') || isPassword
 
   return (
     <div className={`flex flex-col gap-1.5 ${className}`}>
@@ -45,7 +45,7 @@ export default function Input({
 
       <div className="relative">
         {hasLeftIcon && (
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-ink/40 pointer-events-none">
+          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink/40 pointer-events-none flex items-center">
             {icon}
           </span>
         )}
@@ -61,11 +61,13 @@ export default function Input({
           required={required}
           className={`
             ${stateClass}
-            ${hasLeftIcon ? 'pl-10' : ''}
-            ${hasRightContent ? 'pr-10' : ''}
             ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
             ${inputClassName}
           `}
+          style={{
+            paddingLeft:  hasLeftIcon ? '40px' : undefined,
+            paddingRight: hasRightContent ? '40px' : undefined,
+          }}
           {...props}
         />
 
@@ -73,7 +75,7 @@ export default function Input({
           <button
             type="button"
             onClick={() => setShowPassword((p) => !p)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-ink/40 hover:text-ink transition-colors"
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-ink/40 hover:text-ink transition-colors flex items-center"
             tabIndex={-1}
           >
             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -81,7 +83,7 @@ export default function Input({
         )}
 
         {!isPassword && icon && iconPosition === 'right' && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-ink/40 pointer-events-none">
+          <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-ink/40 pointer-events-none flex items-center">
             {icon}
           </span>
         )}
@@ -142,10 +144,10 @@ export function Select({
           nb-input appearance-none cursor-pointer
           bg-[url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%230D0D0D' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")]
           bg-no-repeat bg-[right_14px_center]
-          pr-10
           ${error ? 'border-rose shadow-[3px_3px_0px_#F09595]' : ''}
           ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
         `}
+        style={{ paddingRight: '40px' }}
         {...props}
       >
         <option value="" disabled>
