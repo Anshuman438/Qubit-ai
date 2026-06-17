@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { PublicNavbar } from '@/components/layout/Navbar'
 import Button from '@/components/ui/Button'
+import { slugify } from '@/utils/helpers'
 import {
   Zap,
   Upload,
@@ -9,7 +10,6 @@ import {
   BarChart3,
   Shield,
   Clock,
-  Users,
   FileText,
   ArrowRight,
   CheckCircle2,
@@ -32,7 +32,7 @@ const FEATURES = [
   {
     icon: Play,
     title: 'Go Live Instantly',
-    description: 'Share a 6-character code or QR. Students join from any device — no app, no account needed.',
+    description: 'Share a 6-character code or QR. Students join from any device, no app, no account needed.',
     accent: 'bg-mint',
   },
   {
@@ -44,7 +44,7 @@ const FEATURES = [
   {
     icon: Shield,
     title: 'Built-in Anti-cheat',
-    description: 'Tab switch detection, fullscreen enforcement, and copy-paste blocking — no extensions required.',
+    description: 'Tab switch detection, fullscreen enforcement, and copy-paste blocking, no extensions required.',
     accent: 'bg-peach',
   },
   {
@@ -59,16 +59,18 @@ const STEPS = [
   { step: '01', title: 'Upload your material', description: 'Drop a PDF, Word doc, or paste text directly.' },
   { step: '02', title: 'AI writes the questions', description: 'Choose count, difficulty, and question type. Done in seconds.' },
   { step: '03', title: 'Review and publish', description: 'Edit questions if needed, then hit publish to go live.' },
-  { step: '04', title: 'Share the code', description: 'Students join with a 6-char code or scan the QR — no login needed.' },
+  { step: '04', title: 'Share the code', description: 'Students join with a 6-char code or scan the QR, no login needed.' },
   { step: '05', title: 'Watch results live', description: 'See scores, flag cheaters, and export reports instantly.' },
 ]
 
 const STATS = [
-  { value: '60s',  label: 'Average quiz creation time' },
-  { value: '99%',  label: 'AI question accuracy' },
-  { value: '0',    label: 'Extensions required' },
-  { value: '∞',    label: 'Students per quiz' },
+  { value: '60s', label: 'Average quiz creation time' },
+  { value: '99%', label: 'AI question accuracy' },
+  { value: '0',   label: 'Extensions required' },
+  { value: 'Unlimited', label: 'Students per quiz' },
 ]
+
+const FOOTER_LINKS = ['Features', 'How it works', 'Founders']
 
 export default function Landing() {
   const navigate = useNavigate()
@@ -85,15 +87,7 @@ export default function Landing() {
           </div>
 
           <h1 className="font-display text-5xl md:text-7xl font-800 text-ink leading-none text-balance animate-slide-in-up">
-            Turn any file into a{' '}
-            <span className="relative inline-block">
-              <span className="relative z-10">brilliant quiz</span>
-              <span
-                className="absolute inset-x-0 bottom-1 h-4 bg-volt -z-0"
-                style={{ transform: 'skewX(-3deg)' }}
-              />
-            </span>
-            {' '}— instantly
+            Turn any file into a brilliant quiz, instantly
           </h1>
 
           <p className="font-body text-lg md:text-xl text-ink/60 max-w-2xl text-balance animate-slide-in-up">
@@ -119,15 +113,21 @@ export default function Landing() {
             </Button>
           </div>
 
-          <div className="flex items-center gap-2 font-body text-sm text-ink/50 animate-slide-in-up">
-            <CheckCircle2 size={14} className="text-mint" />
-            No credit card required
-            <span className="mx-2">·</span>
-            <CheckCircle2 size={14} className="text-mint" />
-            Free to get started
-            <span className="mx-2">·</span>
-            <CheckCircle2 size={14} className="text-mint" />
-            No extensions needed
+          <div className="flex flex-wrap items-center justify-center gap-2 font-body text-sm text-ink/50 animate-slide-in-up">
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 size={14} className="text-mint" />
+              No credit card required
+            </span>
+            <span className="hidden sm:inline">·</span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 size={14} className="text-mint" />
+              Free to get started
+            </span>
+            <span className="hidden sm:inline">·</span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 size={14} className="text-mint" />
+              No extensions needed
+            </span>
           </div>
         </div>
 
@@ -145,7 +145,7 @@ export default function Landing() {
               </div>
               <div className="flex flex-col gap-0.5">
                 <span className="font-body text-sm font-600">chapter-5-photosynthesis.pdf</span>
-                <span className="font-mono text-xs text-ink/50">2.4 MB · Uploaded</span>
+                <span className="font-mono text-xs text-ink/50">2.4 MB, Uploaded</span>
               </div>
               <div className="ml-auto nb-badge-mint text-xs">Ready</div>
             </div>
@@ -154,10 +154,10 @@ export default function Landing() {
                 { label: 'Questions', value: '10' },
                 { label: 'Type', value: 'MCQ' },
                 { label: 'Difficulty', value: 'Medium' },
-              ].map(({ label, value }) => (
-                <div key={label} className="p-3 bg-white rounded-nb border-2.5 border-ink text-center">
-                  <p className="font-display text-lg font-800 text-ink">{value}</p>
-                  <p className="font-body text-xs text-ink/50">{label}</p>
+              ].map((item) => (
+                <div key={item.label} className="p-3 bg-white rounded-nb border-2.5 border-ink text-center">
+                  <p className="font-display text-lg font-800 text-ink">{item.value}</p>
+                  <p className="font-body text-xs text-ink/50">{item.label}</p>
                 </div>
               ))}
             </div>
@@ -171,10 +171,10 @@ export default function Landing() {
       <section className="bg-ink py-16" id="stats">
         <div className="nb-container">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {STATS.map(({ value, label }) => (
-              <div key={label} className="flex flex-col items-center text-center gap-2">
-                <span className="font-display text-5xl font-800 text-volt">{value}</span>
-                <span className="font-body text-sm text-white/60">{label}</span>
+            {STATS.map((item) => (
+              <div key={item.label} className="flex flex-col items-center text-center gap-2">
+                <span className="font-display text-5xl font-800 text-volt">{item.value}</span>
+                <span className="font-body text-sm text-white/60">{item.label}</span>
               </div>
             ))}
           </div>
@@ -194,17 +194,23 @@ export default function Landing() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {FEATURES.map(({ icon: Icon, title, description, accent }) => (
-              <div key={title} className="nb-card p-6 flex flex-col gap-4 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-nb-lg transition-all duration-150">
-                <div className={`w-11 h-11 ${accent} border-2.5 border-ink rounded-nb shadow-nb-sm flex items-center justify-center`}>
-                  <Icon size={20} className="text-ink" />
+            {FEATURES.map((feature) => {
+              const Icon = feature.icon
+              return (
+                <div
+                  key={feature.title}
+                  className="nb-card p-6 flex flex-col gap-4 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-nb-lg transition-all duration-150"
+                >
+                  <div className={feature.accent + ' w-11 h-11 border-2.5 border-ink rounded-nb shadow-nb-sm flex items-center justify-center'}>
+                    <Icon size={20} className="text-ink" />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <h3 className="font-display text-lg font-800 text-ink">{feature.title}</h3>
+                    <p className="font-body text-sm text-ink/60 leading-relaxed">{feature.description}</p>
+                  </div>
                 </div>
-                <div className="flex flex-col gap-1.5">
-                  <h3 className="font-display text-lg font-800 text-ink">{title}</h3>
-                  <p className="font-body text-sm text-ink/60 leading-relaxed">{description}</p>
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </section>
@@ -219,19 +225,19 @@ export default function Landing() {
           </div>
 
           <div className="flex flex-col gap-4 max-w-2xl mx-auto">
-            {STEPS.map(({ step, title, description }, index) => (
-              <div key={step} className="flex items-start gap-5">
+            {STEPS.map((item, index) => (
+              <div key={item.step} className="flex items-start gap-5">
                 <div className="flex flex-col items-center gap-2 shrink-0">
                   <div className="w-12 h-12 bg-volt border-2.5 border-ink rounded-nb shadow-nb flex items-center justify-center">
-                    <span className="font-mono text-sm font-700 text-ink">{step}</span>
+                    <span className="font-mono text-sm font-700 text-ink">{item.step}</span>
                   </div>
                   {index < STEPS.length - 1 && (
                     <div className="w-0.5 h-8 bg-ink/20" />
                   )}
                 </div>
                 <div className="nb-card p-4 flex-1 flex flex-col gap-1 mb-4">
-                  <h3 className="font-display text-base font-800 text-ink">{title}</h3>
-                  <p className="font-body text-sm text-ink/60">{description}</p>
+                  <h3 className="font-display text-base font-800 text-ink">{item.title}</h3>
+                  <p className="font-body text-sm text-ink/60">{item.description}</p>
                 </div>
               </div>
             ))}
@@ -243,7 +249,7 @@ export default function Landing() {
         <div className="nb-container">
           <div className="nb-card-volt p-10 md:p-16 flex flex-col items-center text-center gap-6">
             <div className="flex items-center gap-1">
-              {[...Array(5)].map((_, i) => (
+              {[0, 1, 2, 3, 4].map((i) => (
                 <Star key={i} size={20} className="text-ink fill-ink" />
               ))}
             </div>
@@ -285,19 +291,26 @@ export default function Landing() {
               </div>
               <span className="font-display text-lg font-800 text-white">Qubit AI</span>
             </div>
+
             <div className="flex items-center gap-6">
-              {['Features', 'How it works', 'Founders'].map((link) => (
-                
-                  key={link}
-                  href={link === 'Founders' ? '/founders' : `#${link.toLowerCase().replace(/\s+/g, '-')}`}
-                  className="font-body text-sm text-white/50 hover:text-white transition-colors"
-                >
-                  {link}
-                </a>
-              ))}
+              {FOOTER_LINKS.map((link) => {
+                const isInternal = link === 'Founders'
+                const slug = slugify(link)
+                const href = isInternal ? '/founders' : '#' + slug
+             return (
+  <a
+    key={link}
+    href={href}
+    className="font-body text-sm text-white/50 hover:text-white transition-colors"
+  >
+    {link}
+  </a>
+)
+              })}
             </div>
+
             <p className="font-body text-sm text-white/30">
-              © {new Date().getFullYear()} Qubit AI. Built with ♥
+              Qubit AI. Built with care.
             </p>
           </div>
         </div>
